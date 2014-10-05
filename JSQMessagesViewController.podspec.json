@@ -1,0 +1,43 @@
+{
+  "name": "JSQMessagesViewController",
+  "version": "5.3.2",
+  "summary": "An elegant messages UI library for iOS.",
+  "homepage": "https://github.com/Azat92/JSQMessagesViewController",
+  "license": "MIT",
+  "screenshots": [
+    "https://raw.githubusercontent.com/jessesquires/JSQMessagesViewController/develop/Screenshots/screenshot0.png",
+    "https://raw.githubusercontent.com/jessesquires/JSQMessagesViewController/develop/Screenshots/screenshot1.png"
+  ],
+  "authors": {
+    "Azat Almeev": "azat.almeev@gmail.com"
+  },
+  "social_media_url": "https://twitter.com/AzatAlmeev",
+  "source": {
+    "git": "https://github.com/Azat92/JSQMessagesViewController.git",
+    "tag": "5.3.2"
+  },
+  "platforms": {
+    "ios": "7.0"
+  },
+  "source_files": "JSQMessagesViewController/**/*.{h,m}",
+  "resources": [
+    "JSQMessagesViewController/Assets/**/*.{png,aiff}",
+    "JSQMessagesViewController/**/*.{xib}"
+  ],
+  "frameworks": [
+    "QuartzCore",
+    "CoreGraphics"
+  ],
+  "requires_arc": true,
+  "dependencies": {
+    "JSQSystemSoundPlayer": [
+
+    ],
+    "SDWebImage": [
+
+    ],
+    "BlocksKit": [
+
+    ]
+  }
+}
