@@ -472,6 +472,21 @@ static NSString * const kJSQDemoAvatarNameWoz = @"Steve Wozniak";
     NSLog(@"Tapped message bubble!");
 }
 
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapPictureIndex:(NSInteger)pictureIndex atIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"Tapped picture %ld at indexPath %@", (long)pictureIndex, indexPath);
+}
+
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapVideoIndex:(NSInteger)videoIndex atIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"Tapped video %ld at indexPath %@", (long)videoIndex, indexPath);
+}
+
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapDocumentIndex:(NSInteger)documentIndex atIndexPath:(NSIndexPath *)indexPath
+{
+     NSLog(@"Tapped document %ld at indexPath %@", (long)documentIndex, indexPath);
+}
+
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapCellAtIndexPath:(NSIndexPath *)indexPath touchLocation:(CGPoint)touchLocation
 {
     NSLog(@"Tapped cell at %@!", NSStringFromCGPoint(touchLocation));

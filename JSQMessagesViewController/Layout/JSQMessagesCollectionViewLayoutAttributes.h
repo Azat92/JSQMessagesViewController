@@ -84,6 +84,12 @@
 @property (assign, nonatomic) CGSize outgoingAvatarViewSize;
 
 /**
+ *  The height of `mediaView` of a `JSQMessagesCollectionViewCell`.
+ *  The value should be greater than or equal to `0.0`.
+ */
+@property (assign, nonatomic) CGFloat heightForEmbeddedAttachments;
+
+/**
  *  The height of the `cellTopLabel` of a `JSQMessagesCollectionViewCell`.
  *  This value should be greater than or equal to `0.0`.
  *

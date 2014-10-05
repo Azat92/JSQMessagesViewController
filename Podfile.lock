@@ -1,13 +1,35 @@
 PODS:
+  - BlocksKit (2.2.5):
+    - BlocksKit/All
+  - BlocksKit/All (2.2.5):
+    - BlocksKit/Core
+    - BlocksKit/DynamicDelegate
+    - BlocksKit/MessageUI
+    - BlocksKit/UIKit
+  - BlocksKit/Core (2.2.5)
+  - BlocksKit/DynamicDelegate (2.2.5)
+  - BlocksKit/MessageUI (2.2.5):
+    - BlocksKit/Core
+    - BlocksKit/DynamicDelegate
+  - BlocksKit/UIKit (2.2.5):
+    - BlocksKit/Core
+    - BlocksKit/DynamicDelegate
   - JSQSystemSoundPlayer (1.5.1)
   - OCMock (2.2.4)
+  - SDWebImage (3.7.1):
+    - SDWebImage/Core
+  - SDWebImage/Core (3.7.1)
 
 DEPENDENCIES:
+  - BlocksKit
   - JSQSystemSoundPlayer
   - OCMock
+  - SDWebImage
 
 SPEC CHECKSUMS:
+  BlocksKit: 4439e7f30a9f90743462ca63545a15c1f4304cef
   JSQSystemSoundPlayer: a662f27f4ebac9f867116fc6c3926c19206c5e60
   OCMock: 6db79185520e24f9f299548f2b8b07e41d881bd5
+  SDWebImage: 116e88633b5b416ea0ca4b334a4ac59cf72dd38d
 
-COCOAPODS: 0.33.1
+COCOAPODS: 0.34.1

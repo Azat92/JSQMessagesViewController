@@ -42,6 +42,21 @@
  */
 @property (copy, nonatomic) NSDate *date;
 
+/**
+ *  The array of image URLs for message was sent.
+ */
+@property (nonatomic, strong) NSArray *imageURLs;
+
+/**
+ *  The array of video preview URLs for message was sent.
+ */
+@property (nonatomic, strong) NSArray *videoPreviewURLs;
+
+/**
+ *  The array of document names for message was sent.
+ */
+@property (nonatomic, strong) NSArray *documentNames;
+
 #pragma mark - Initialization
 
 /**
@@ -66,6 +81,25 @@
 - (instancetype)initWithText:(NSString *)text
                       sender:(NSString *)sender
                         date:(NSDate *)date;
+
+/**
+ *  Initializes and returns a message object having the given text, sender, and date.
+ *
+ *  @param text             The body text of the message.
+ *  @param sender           The name of the user who sent the message.
+ *  @param date             The date that the message was sent.
+ *  @param imageURLs        The embedded image URLs
+ *  @param videoPreviewURLs The embedded video preview URLs
+ *  @param documentNames    The embedded document names
+ *
+ *  @return An initialized `JSQMessage` object or `nil` if the object could not be successfully initialized.
+ */
+- (instancetype)initWithText:(NSString *)text
+                      sender:(NSString *)sender
+                        date:(NSDate *)date
+                   imageURLs:(NSArray *)imageURLs
+            videoPreviewURLs:(NSArray *)videoPreviewURLs
+               documentNames:(NSArray *)documentNames;
 
 /**
  *  Returns a boolean value that indicates whether a given message is equal to the receiver.

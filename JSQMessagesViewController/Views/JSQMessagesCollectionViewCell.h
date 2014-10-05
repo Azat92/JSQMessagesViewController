@@ -100,6 +100,11 @@
 @property (weak, nonatomic, readonly) UITextView *textView;
 
 /**
+ * Returns the view that contains media attachments
+ */
+@property (nonatomic, weak) IBOutlet UIView *mediaView;
+
+/**
  *  Returns the message bubble container view of the cell. This view is the superview of
  *  the cell's textView and messageBubbleImageView.
  *

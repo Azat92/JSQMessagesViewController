@@ -157,6 +157,34 @@ FOUNDATION_EXPORT const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault
 @property (assign, nonatomic) CGSize outgoingAvatarViewSize;
 
 /**
+ *  The height of the embedded image for messages.
+ *
+ *  @discussion The default value is `90.0f`.
+ */
+@property (assign, nonatomic) CGFloat heightForEmbeddedImage;
+
+/**
+ *  The height of the embedded video for messages.
+ *
+ *  @discussion The default value is `90.0f`.
+ */
+@property (assign, nonatomic) CGFloat heightForEmbeddedVideo;
+
+/**
+ *  The height of the embedded file URL for messages.
+ *
+ *  @discussion The default value is `20.0f`.
+ */
+@property (assign, nonatomic) CGFloat heightForEmbeddedFile;
+
+/**
+ *  The name of image in app's bundle to overlay video preview images.
+ *
+ *  @discussion The default value is `VideoOverlayIcon`.
+ */
+@property (copy, nonatomic) NSString *videoOverlayIconBundleName;
+
+/**
  *  Computes and returns the size of the `messageBubbleImageView` property of a `JSQMessagesCollectionViewCell` 
  *  to display its entire message contents. Note, this is *not* the entire cell, but only its message bubble.
  *

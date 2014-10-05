@@ -40,6 +40,9 @@
 #import "NSString+JSQMessages.h"
 #import "UIColor+JSQMessages.h"
 
+#import <SDWebImage/UIButton+WebCache.h>
+#import <BlocksKit+UIKit.h>
+#import <BlocksKit+MessageUI.h>
 
 static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObservingContext;
 
@@ -433,6 +436,64 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
     
     cell.textView.dataDetectorTypes = UIDataDetectorTypeAll;
     
+    [cell.mediaView.subviews enumerateObjectsUsingBlock:^(UIButton *button, NSUInteger idx, BOOL *stop) {
+        if ([button isKindOfClass:[UIButton class]])
+            [button bk_removeEventHandlersForControlEvents:UIControlEventTouchUpInside];
+    }];
+    [cell.mediaView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
+    __weak typeof(self) self_ = self;
+    CGFloat imageHeight = self.collectionView.collectionViewLayout.heightForEmbeddedImage;
+    for (NSInteger imageIndex = 0; imageIndex < [messageData imageURLs].count; imageIndex++)
+    {
+        CGRect imageFrame = CGRectMake(0, imageIndex * (imageHeight + 8), 120, imageHeight);
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.frame = imageFrame;
+        [button sd_setImageWithURL:[messageData imageURLs][imageIndex] forState:UIControlStateNormal];
+        button.imageView.contentMode = UIViewContentModeScaleAspectFill;
+        [cell.mediaView addSubview:button];
+        [button bk_addEventHandler:^(id sender) {
+            [self_.collectionView.delegate collectionView:self_.collectionView didTapPictureIndex:imageIndex atIndexPath:indexPath];
+        } forControlEvents:UIControlEventTouchUpInside];
+    }
+    CGFloat currentOffset = [messageData imageURLs].count * (imageHeight + 8);
+    
+    CGFloat videoHeight = self.collectionView.collectionViewLayout.heightForEmbeddedVideo;
+    for (NSInteger videoIndex = 0; videoIndex < [messageData imageURLs].count; videoIndex++)
+    {
+        CGRect imageFrame = CGRectMake(0, currentOffset + videoIndex * (videoHeight + 8), 120, videoHeight);
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.frame = imageFrame;
+        [button sd_setImageWithURL:[messageData videoPreviewURLs][videoIndex] forState:UIControlStateNormal];
+        button.imageView.contentMode = UIViewContentModeScaleAspectFill;
+        [cell.mediaView addSubview:button];
+        UIImageView *playImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:self.collectionView.collectionViewLayout.videoOverlayIconBundleName]];
+        CGRect frame = playImage.frame;
+        frame.size = CGSizeMake(30, 30);
+        playImage.frame = frame;
+        playImage.center = button.center;
+        [cell.mediaView addSubview:playImage];
+        [button bk_addEventHandler:^(id sender) {
+            [self_.collectionView.delegate collectionView:self_.collectionView didTapVideoIndex:videoIndex atIndexPath:indexPath];
+        } forControlEvents:UIControlEventTouchUpInside];
+    }
+    
+    currentOffset += [messageData videoPreviewURLs].count * (videoHeight + 8);
+    CGFloat docHeight = self.collectionView.collectionViewLayout.heightForEmbeddedFile;
+    CGSize bubbleSize = [self.collectionView.collectionViewLayout messageBubbleSizeForItemAtIndexPath:indexPath];
+    for (NSInteger docIndex = 0; docIndex < [messageData documentNames].count; docIndex++)
+    {
+        CGRect docFrame = CGRectMake(0, currentOffset + docIndex * (docHeight + 8), MIN(200, bubbleSize.width - 30), docHeight);
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.frame = docFrame;
+        button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        [button setAttributedTitle:[[NSAttributedString alloc] initWithString:[messageData documentNames][docIndex] attributes:@{ NSFontAttributeName : self.collectionView.collectionViewLayout.messageBubbleFont, NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle) }] forState:UIControlStateNormal];
+        [cell.mediaView addSubview:button];
+        [button bk_addEventHandler:^(id sender) {
+            [self_.collectionView.delegate collectionView:self_.collectionView didTapDocumentIndex:docIndex atIndexPath:indexPath];
+        } forControlEvents:UIControlEventTouchUpInside];
+    }
+    
     return cell;
 }
 
@@ -544,6 +605,12 @@ static void * kJSQMessagesKeyValueObservingContext = &kJSQMessagesKeyValueObserv
            atIndexPath:(NSIndexPath *)indexPath { }
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath { }
+
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapPictureIndex:(NSInteger)pictureIndex atIndexPath:(NSIndexPath *)indexPath { }
+
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapVideoIndex:(NSInteger)videoIndex atIndexPath:(NSIndexPath *)indexPath { }
+
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapDocumentIndex:(NSInteger)documentIndex atIndexPath:(NSIndexPath *)indexPath { }
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView
  didTapCellAtIndexPath:(NSIndexPath *)indexPath

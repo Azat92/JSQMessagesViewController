@@ -50,6 +50,21 @@
  */
 - (NSDate *)date;
 
+/**
+ *  @return The embedded image URLs for message.
+ */
+- (NSArray *)imageURLs;
+
+/**
+ *  @return The embedded video preview URLs for message.
+ */
+- (NSArray *)videoPreviewURLs;
+
+/**
+ *  @return The embedded document names for message.
+ */
+- (NSArray *)documentNames;
+
 @end
 
 #endif

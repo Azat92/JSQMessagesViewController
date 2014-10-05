@@ -72,6 +72,12 @@
     _cellBottomLabelHeight = floorf(cellBottomLabelHeight);
 }
 
+- (void)setHeightForEmbeddedAttachments:(CGFloat)heightForEmbeddedAttachments
+{
+    NSParameterAssert(heightForEmbeddedAttachments >= 0.0f);
+    _heightForEmbeddedAttachments = floorf(heightForEmbeddedAttachments);
+}
+
 #pragma mark - NSObject
 
 - (BOOL)isEqual:(id)object
@@ -92,6 +98,7 @@
             || !UIEdgeInsetsEqualToEdgeInsets(layoutAttributes.textViewTextContainerInsets, self.textViewTextContainerInsets)
             || !CGSizeEqualToSize(layoutAttributes.incomingAvatarViewSize, self.incomingAvatarViewSize)
             || !CGSizeEqualToSize(layoutAttributes.outgoingAvatarViewSize, self.outgoingAvatarViewSize)
+            || (int)layoutAttributes.heightForEmbeddedAttachments != (int)self.heightForEmbeddedAttachments
             || (int)layoutAttributes.messageBubbleLeftRightMargin != (int)self.messageBubbleLeftRightMargin
             || (int)layoutAttributes.cellTopLabelHeight != (int)self.cellTopLabelHeight
             || (int)layoutAttributes.messageBubbleTopLabelHeight != (int)self.messageBubbleTopLabelHeight
@@ -124,6 +131,7 @@
     copy.textViewTextContainerInsets = self.textViewTextContainerInsets;
     copy.incomingAvatarViewSize = self.incomingAvatarViewSize;
     copy.outgoingAvatarViewSize = self.outgoingAvatarViewSize;
+    copy.heightForEmbeddedAttachments = self.heightForEmbeddedAttachments;
     copy.cellTopLabelHeight = self.cellTopLabelHeight;
     copy.messageBubbleTopLabelHeight = self.messageBubbleTopLabelHeight;
     copy.cellBottomLabelHeight = self.cellBottomLabelHeight;

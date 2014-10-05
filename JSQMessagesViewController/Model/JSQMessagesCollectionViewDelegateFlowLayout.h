@@ -97,6 +97,33 @@
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath;
 
 /**
+ *  Notifies the delegate that the embedded picture preview at the specified indexPath did receive a tap event.
+ *
+ *  @param collectionView The collection view object that is notifying the delegate of the tap event.
+ *  @param pictureIndex   The index of the picture in message embedded pictures array
+ *  @param indexPath      The index path of the item for which the message bubble was tapped.
+ */
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapPictureIndex:(NSInteger)pictureIndex atIndexPath:(NSIndexPath *)indexPath;
+
+/**
+ *  Notifies the delegate that the embedded video preview at the specified indexPath did receive a tap event.
+ *
+ *  @param collectionView The collection view object that is notifying the delegate of the tap event.
+ *  @param videoIndex     The index of the video in message embedded videos array
+ *  @param indexPath      The index path of the item for which the message bubble was tapped.
+ */
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapVideoIndex:(NSInteger)videoIndex atIndexPath:(NSIndexPath *)indexPath;
+
+/**
+ *  Notifies the delegate that the embedded document URL at the specified indexPath did receive a tap event.
+ *
+ *  @param collectionView The collection view object that is notifying the delegate of the tap event.
+ *  @param documentIndex  The index of the document in message embedded documents array
+ *  @param indexPath      The index path of the item for which the message bubble was tapped.
+ */
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapDocumentIndex:(NSInteger)documentIndex atIndexPath:(NSIndexPath *)indexPath;
+
+/**
  *  Notifies the delegate that the cell at the specified indexPath did receive a tap event at the specified touchLocation.
  *
  *  @param collectionView The collection view object that is notifying the delegate of the tap event.

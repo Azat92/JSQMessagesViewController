@@ -31,6 +31,9 @@
 #import "JSQMessagesCollectionViewLayoutAttributes.h"
 #import "JSQMessagesCollectionViewFlowLayoutInvalidationContext.h"
 
+#import <BlocksKit.h>
+#import <BlocksKit+UIKit.h>
+
 const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
 
 
@@ -91,6 +94,11 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
     CGSize defaultAvatarSize = CGSizeMake(34.0f, 34.0f);
     _incomingAvatarViewSize = defaultAvatarSize;
     _outgoingAvatarViewSize = defaultAvatarSize;
+    
+    _heightForEmbeddedImage = 90;
+    _heightForEmbeddedVideo = 90;
+    _heightForEmbeddedFile = 20;
+    _videoOverlayIconBundleName = @"VideoOverlayIcon";
     
     _springinessEnabled = NO;
     _springResistanceFactor = 1000;
@@ -185,6 +193,24 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
 - (void)setOutgoingAvatarViewSize:(CGSize)outgoingAvatarViewSize
 {
     _outgoingAvatarViewSize = outgoingAvatarViewSize;
+    [self invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
+}
+
+- (void)setHeightForEmbeddedImage:(CGFloat)heightForEmbeddedImage
+{
+    _heightForEmbeddedImage = heightForEmbeddedImage;
+    [self invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
+}
+
+- (void)setHeightForEmbeddedVideo:(CGFloat)heightForEmbeddedVideo
+{
+    _heightForEmbeddedVideo = heightForEmbeddedVideo;
+    [self invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
+}
+
+- (void)setHeightForEmbeddedFile:(CGFloat)heightForEmbeddedFile
+{
+    _heightForEmbeddedFile = heightForEmbeddedFile;
     [self invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
 }
 
@@ -393,6 +419,12 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
                                                          context:nil];
     
     CGSize stringSize = CGRectIntegral(stringRect).size;
+    if (stringSize.width == 0)
+        stringSize.height = -10;
+    
+    CGFloat attachmentsHeight = [messageData imageURLs].count * (self.collectionView.collectionViewLayout.heightForEmbeddedImage + 8) +
+    [messageData videoPreviewURLs].count * (self.collectionView.collectionViewLayout.heightForEmbeddedVideo + 8) +
+    [messageData documentNames].count * (self.collectionView.collectionViewLayout.heightForEmbeddedFile + 8);
     
     CGFloat verticalContainerInsets = self.messageBubbleTextViewTextContainerInsets.top + self.messageBubbleTextViewTextContainerInsets.bottom;
     CGFloat verticalFrameInsets = self.messageBubbleTextViewFrameInsets.top + self.messageBubbleTextViewFrameInsets.bottom;
@@ -401,9 +433,26 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
     //  not sure why. magix. (shrug) if you know, submit a PR
     CGFloat verticalInsets = verticalContainerInsets + verticalFrameInsets + 2.0f;
     
-    CGFloat finalWidth = MAX(stringSize.width + horizontalInsetsTotal, [UIImage imageNamed:@"bubble_min"].size.width);
+    CGFloat spacingBetweenTextViewAndMediaArea = 6.0f;
+    verticalInsets += spacingBetweenTextViewAndMediaArea;
     
-    CGSize finalSize = CGSizeMake(finalWidth, stringSize.height + verticalInsets);
+    CGFloat attachmentWidth = 0;
+    if ([messageData imageURLs].count > 0 || [messageData videoPreviewURLs].count > 0)
+        attachmentWidth = 120;//width for media attachments
+    if ([messageData documentNames].count > 0)
+    {
+        CGFloat fileHeight = self.collectionView.collectionViewLayout.heightForEmbeddedFile;
+        NSArray *textWidth = [[messageData documentNames] bk_map:^id(NSString *name) {
+            CGSize size = [name boundingRectWithSize:CGSizeMake(maximumTextWidth, fileHeight) options:0 attributes:@{ NSFontAttributeName : self.collectionView.collectionViewLayout.messageBubbleFont, NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle) } context:nil].size;
+            return @(MIN(size.width, 200));
+        }];
+        NSNumber *maxWidth = [textWidth valueForKeyPath:@"@max.floatValue"];
+        attachmentWidth = MAX(attachmentWidth, [maxWidth floatValue]);
+    }
+    
+    CGFloat finalWidth = MAX(MAX(stringSize.width, attachmentWidth) + horizontalInsetsTotal, [UIImage imageNamed:@"bubble_min"].size.width);
+    
+    CGSize finalSize = CGSizeMake(finalWidth, stringSize.height + verticalInsets + attachmentsHeight);
     
     [self.messageBubbleSizes setObject:[NSValue valueWithCGSize:finalSize] forKey:indexPath];
     
@@ -430,7 +479,7 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
     layoutAttributes.incomingAvatarViewSize = self.incomingAvatarViewSize;
     
     layoutAttributes.outgoingAvatarViewSize = self.outgoingAvatarViewSize;
-    
+
     layoutAttributes.cellTopLabelHeight = [self.collectionView.delegate collectionView:self.collectionView
                                                                                 layout:self
                                                       heightForCellTopLabelAtIndexPath:indexPath];
@@ -442,6 +491,14 @@ const CGFloat kJSQMessagesCollectionViewCellLabelHeightDefault = 20.0f;
     layoutAttributes.cellBottomLabelHeight = [self.collectionView.delegate collectionView:self.collectionView
                                                                                    layout:self
                                                       heightForCellBottomLabelAtIndexPath:indexPath];
+    
+    id<JSQMessageData> messageData = [self.collectionView.dataSource collectionView:self.collectionView messageDataForItemAtIndexPath:indexPath];
+    
+    CGFloat attachmentsHeight = [messageData imageURLs].count * (self.collectionView.collectionViewLayout.heightForEmbeddedImage + 8) +
+    [messageData videoPreviewURLs].count * (self.collectionView.collectionViewLayout.heightForEmbeddedVideo + 8) +
+    [messageData documentNames].count * (self.collectionView.collectionViewLayout.heightForEmbeddedFile + 8);
+    
+    layoutAttributes.heightForEmbeddedAttachments = attachmentsHeight;
 }
 
 - (CGSize)jsq_avatarSizeForIndexPath:(NSIndexPath *)indexPath
