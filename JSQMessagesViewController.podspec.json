@@ -14,7 +14,7 @@
   "social_media_url": "https://twitter.com/AzatAlmeev",
   "source": {
     "git": "https://github.com/Azat92/JSQMessagesViewController.git",
-    "tag": "5.3.2"
+    "tag": "5.3.3"
   },
   "platforms": {
     "ios": "7.0"
